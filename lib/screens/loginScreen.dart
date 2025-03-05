@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:item_exchange/screens/homeScreen.dart';
 
 // Onboarding 页面
 class OnboardingScreen extends StatelessWidget {
@@ -186,16 +187,26 @@ class LoginScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // 处理登录逻辑
+                // Navigator.pushReplacementNamed(context, '/homeScreen');
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen()), // 跳转到主界面
+                  (Route<dynamic> route) => false, // 清除所有路由
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFF2625A),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
-                 shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // 设置圆角
-                    ),    
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // 设置圆角
+                ),
               ),
-              child: const Text('Login',style: TextStyle(color: Colors.white,fontSize: 16),),
+              child: const Text(
+                'Login',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
             const SizedBox(height: 16),
             Center(
