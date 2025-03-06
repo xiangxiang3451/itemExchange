@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:item_exchange/screens/postScreen.dart';
 import 'package:item_exchange/screens/searchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,12 +13,21 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     HomeContent(), // 主页内容
     SearchScreen(), // 搜索页面
+    PostScreen(),
+
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 2) { // 相机图标的索引是 2
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => PostScreen()),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
