@@ -32,7 +32,10 @@ class PostScreen extends StatelessWidget {
                     icon:
                         const Icon(Icons.arrow_back, color: Color(0xFFF2625A)),
                     onPressed: () {
-                      Navigator.pop(context); // 返回上一页
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      ); // 返回上一页
                     },
                   ),
                 ),
