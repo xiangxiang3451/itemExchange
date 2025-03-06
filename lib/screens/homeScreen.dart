@@ -1,126 +1,184 @@
 import 'package:flutter/material.dart';
+import 'package:item_exchange/screens/searchScreen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0; // 当前选中的底部导航栏索引
+
+  final List<Widget> _pages = [
+    HomeContent(), // 主页内容
+    SearchScreen(), // 搜索页面
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: 'Good morning!\n', // 第一行文本
-                style: TextStyle(
-                  fontSize: 20, // 设置字体大小为 24
-                  fontWeight: FontWeight.bold, // 设置字体加粗
-                  color: Colors.black, // 设置字体颜色
-                ),
-              ),
-              TextSpan(
-                text: 'Jennifer', // 第二行文本
-                style: TextStyle(
-                  fontSize: 13, // 设置字体大小为 18
-                  fontWeight: FontWeight.normal, // 设置字体不加粗
-                  color: Colors.black, // 设置字体颜色
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://gitee.com/chang-pengxiang/apk_test/raw/master/Avatar.png'),
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 在列表上方添加文字
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 左对齐
-                children: [
-                  // "Fresh New" 文本
-                  const Text(
-                    'Fresh New',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+      appBar: _selectedIndex == 0
+          ? AppBar(
+              title: const Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Good morning!\n',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 3), // 添加间距
-                  // 地址图标和文本
-                  Row(
-                    children: const [
-                      Icon(
-                        Icons.location_on, // 地址图标
-                        size: 10, // 图标大小
-                        color: Colors.grey, // 图标颜色
+                    TextSpan(
+                      text: 'Jennifer',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
                       ),
-                      SizedBox(width: 4), // 图标和文本之间的间距
-                      Text(
-                        'Brooklyn, New York', // 假的地址文本
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // 使用 Wrap 实现两列布局
-            Expanded(
-              child: SingleChildScrollView(
-                child: Wrap(
-                  spacing: 16.0, // 水平间距
-                  runSpacing: 16.0, // 垂直间距
-                  children: List.generate(6, (index) {
-                    return SizedBox(
-                      width: (MediaQuery.of(context).size.width - 48) /
-                          2, // 计算卡片宽度
-                      height: 280, // 固定卡片高度
-                      child: _buildItemCard(index),
-                    );
-                  }),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://gitee.com/chang-pengxiang/apk_test/raw/master/Avatar.png'),
+                ),
+              ),
+            )
+          : null, // 只有在主页显示 AppBar
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed, // 固定导航栏布局
+        selectedItemColor: const Color(0xFFF2625A), // 选中图标颜色
+        unselectedItemColor: Colors.grey, // 未选中图标颜色
+        backgroundColor: Colors.white, // 导航栏背景颜色
+        onTap: _onItemTapped,
+        items: [
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home, size: 30), // 主页图标
+            label: '',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.search, size: 30), // 搜索图标
+            label: '',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 30,
-              ),
-              label: ''),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search, size: 30,), label: ''),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt, size: 30), label: ''),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.message, size: 30), label: ''),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person, size: 30), label: ''),
+            icon: _buildCustomCameraIcon(), // 自定义相机图标
+            label: '',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.message, size: 30), // 消息图标
+            label: '',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.person, size: 30), // 个人图标
+            label: '',
+          ),
         ],
-        selectedItemColor: const Color(0xFFF2625A),
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
+      ),
+    );
+  }
+
+  // 自定义相机图标
+  Widget _buildCustomCameraIcon() {
+    return Container(
+      width: 60, // 图标容器宽度
+      height: 60, // 图标容器高度
+      decoration: BoxDecoration(
+        color: const Color(0xFFF2625A), // 圆形背景颜色
+        shape: BoxShape.circle, // 圆形
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: const Icon(
+        Icons.camera_alt,
+        size: 30, // 相机图标大小
+        color: Colors.white, // 相机图标颜色
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 2.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Fresh New',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 3),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 10,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      'Brooklyn, New York',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Wrap(
+                spacing: 16.0,
+                runSpacing: 16.0,
+                children: List.generate(6, (index) {
+                  return SizedBox(
+                    width: (MediaQuery.of(context).size.width - 48) / 2,
+                    height: 280,
+                    child: _buildItemCard(index),
+                  );
+                }),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -157,7 +215,6 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 图片部分
           ClipRRect(
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10),
@@ -167,10 +224,9 @@ class HomeScreen extends StatelessWidget {
               'https://gitee.com/chang-pengxiang/apk_test/raw/master/img.png',
               fit: BoxFit.cover,
               width: double.infinity,
-              height: 150, // 图片的高度（固定）
+              height: 150,
             ),
           ),
-          // 描述部分
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
