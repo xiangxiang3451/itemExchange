@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:item_exchange/viewmodels/postViewmodel.dart';
+import 'package:provider/provider.dart';
 import 'package:item_exchange/screens/homeScreen.dart';
 
-class PostScreen extends StatelessWidget {
+class PostScreen extends StatefulWidget {
+  @override
+  _PostScreenState createState() => _PostScreenState();
+}
+
+class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<PostViewModel>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -29,14 +38,12 @@ class PostScreen extends StatelessWidget {
                   top: 16,
                   left: 5,
                   child: IconButton(
-                    icon:
-                        const Icon(Icons.arrow_back, color: Color(0xFFF2625A)),
+                    icon: const Icon(Icons.arrow_back, color: Color(0xFFF2625A)),
                     onPressed: () {
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => HomeScreen()), // 跳转到主界面
-                        (Route<dynamic> route) => false, // 清除所有路由
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                        (Route<dynamic> route) => false,
                       );
                     },
                   ),
@@ -53,130 +60,133 @@ class PostScreen extends StatelessWidget {
                 ),
               ),
               elevation: 4,
-              margin: EdgeInsets.zero, // 卡片与屏幕边缘无间距
+              margin: EdgeInsets.zero,
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0), // 卡片内容与两边有 padding
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     const Text(
                       'Product name',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 8), // 空白
-                    const TextField(
-                      decoration: InputDecoration(
+                    const SizedBox(height: 8),
+                    TextField(
+                      decoration: const InputDecoration(
                         hintText: 'Lipstick',
-                        border: InputBorder.none, // 取消边框
+                        border: InputBorder.none,
                       ),
+                      onChanged: viewModel.updateProductName,
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     Container(
-                      width: double.infinity, // 占据整个宽度
+                      width: double.infinity,
                       height: 8,
-                      color: Colors.grey.withOpacity(0.2), // 灰色背景
+                      color: Colors.grey.withOpacity(0.2),
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     const Text(
                       'Description 0/500',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 8), // 空白
-                    const TextField(
+                    const SizedBox(height: 8),
+                    TextField(
                       maxLines: 5,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Tell people about your product',
-                        border: InputBorder.none, // 取消边框
+                        border: InputBorder.none,
                       ),
+                      onChanged: viewModel.updateDescription,
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     Container(
-                      width: double.infinity, // 占据整个宽度
+                      width: double.infinity,
                       height: 8,
-                      color: Colors.grey.withOpacity(0.2), // 灰色背景
+                      color: Colors.grey.withOpacity(0.2),
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     const Text(
                       'Select Category/Product Type/Manufacturer',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 8), // 空白
-                    const TextField(
-                      decoration: InputDecoration(
+                    const SizedBox(height: 8),
+                    TextField(
+                      decoration: const InputDecoration(
                         hintText: 'Select',
-                        border: InputBorder.none, // 取消边框
+                        border: InputBorder.none,
                       ),
+                      onChanged: viewModel.updateCategory,
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     Container(
-                      width: double.infinity, // 占据整个宽度
+                      width: double.infinity,
                       height: 8,
-                      color: Colors.grey.withOpacity(0.2), // 灰色背景
+                      color: Colors.grey.withOpacity(0.2),
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     const Text(
                       'Item Condition',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 8), // 空白
+                    const SizedBox(height: 8),
                     Column(
                       children: [
                         CheckboxListTile(
                           title: const Text('New'),
                           value: false,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            viewModel.updateItemCondition('New');
+                          },
                         ),
                         CheckboxListTile(
                           title: const Text('Like new'),
                           value: false,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            viewModel.updateItemCondition('Like new');
+                          },
                         ),
                         CheckboxListTile(
                           title: const Text('Pristine'),
                           value: false,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            viewModel.updateItemCondition('Pristine');
+                          },
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     Container(
-                      width: double.infinity, // 占据整个宽度
+                      width: double.infinity,
                       height: 8,
-                      color: Colors.grey.withOpacity(0.2), // 灰色背景
+                      color: Colors.grey.withOpacity(0.2),
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     const Text(
                       'Remarks',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 8), // 空白
-                    const TextField(
-                      decoration: InputDecoration(
+                    const SizedBox(height: 8),
+                    TextField(
+                      decoration: const InputDecoration(
                         hintText: 'Enter Remarks',
-                        border: InputBorder.none, // 取消边框
+                        border: InputBorder.none,
                       ),
+                      onChanged: viewModel.updateRemarks,
                     ),
-                    const SizedBox(height: 16), // 灰色留白
+                    const SizedBox(height: 16),
                     Container(
-                      width: double.infinity, // 占据整个宽度
+                      width: double.infinity,
                       height: 8,
-                      color: Colors.grey.withOpacity(0.2), // 灰色背景
+                      color: Colors.grey.withOpacity(0.2),
                     ),
-                    const SizedBox(height: 20), // 空白
+                    const SizedBox(height: 20),
                     Center(
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width *
-                            0.7, // 按钮宽度为屏幕宽度的 0.7
+                        width: MediaQuery.of(context).size.width * 0.7,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // 处理发布逻辑
+                          onPressed: () async {
+                            await viewModel.postItem();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -185,10 +195,9 @@ class PostScreen extends StatelessWidget {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFF2625A),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 15), // 垂直内边距
+                            padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0), // 设置圆角
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
                           ),
                           child: const Text(
@@ -198,7 +207,7 @@ class PostScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20), // 空白
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -209,7 +218,6 @@ class PostScreen extends StatelessWidget {
     );
   }
 }
-
 class PostSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

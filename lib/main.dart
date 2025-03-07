@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:item_exchange/screens/LoginScreen.dart';
-import 'package:item_exchange/screens/homeScreen.dart';
+import 'package:item_exchange/screens/loginScreen.dart';
+import 'package:item_exchange/viewmodels/postViewmodel.dart';
+import 'package:provider/provider.dart';
+
+import 'screens/homeScreen.dart'; // PostViewModel
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        // 提供 PostViewModel
+        ChangeNotifierProvider(create: (_) => PostViewModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,11 +25,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/onboarding',
+      initialRoute: '/onboarding', // 初始路由为引导页
       routes: {
         '/onboarding': (context) => OnboardingScreen(),
         '/login': (context) => LoginScreen(),
-        '/homeScreen':(context)=>HomeScreen(),
+        '/homeScreen': (context) => HomeScreen(),
+        // '/postScreen': (context) => PostScreen(), // 添加发布页路由
       },
     );
   }
