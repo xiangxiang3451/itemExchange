@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:item_exchange/screens/messageScreen.dart';
 import 'package:item_exchange/screens/postScreen.dart';
+import 'package:item_exchange/screens/profileScreen.dart';
 import 'package:item_exchange/screens/searchScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,11 +16,13 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeContent(), // 主页内容
     SearchScreen(), // 搜索页面
     PostScreen(),
-
+    MessageScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
-    if (index == 2) { // 相机图标的索引是 2
+    if (index == 2) {
+      // 相机图标的索引是 2
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => PostScreen()),
@@ -73,35 +77,44 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _selectedIndex,
         children: _pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed, // 固定导航栏布局
-        selectedItemColor: const Color(0xFFF2625A), // 选中图标颜色
-        unselectedItemColor: Colors.grey, // 未选中图标颜色
-        backgroundColor: Colors.white, // 导航栏背景颜色
-        onTap: _onItemTapped,
-        items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 30), // 主页图标
-            label: '',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.search, size: 30), // 搜索图标
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: _buildCustomCameraIcon(), // 自定义相机图标
-            label: '',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.message, size: 30), // 消息图标
-            label: '',
-          ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 30), // 个人图标
-            label: '',
-          ),
-        ],
+      bottomNavigationBar: BottomNavigationBarTheme(
+        data: const BottomNavigationBarThemeData(
+          selectedItemColor: Color(0xFFF2625A),
+          unselectedItemColor: Colors.grey,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedIconTheme: IconThemeData(size: 24), // 调整选中图标大小
+          unselectedIconTheme: IconThemeData(size: 24), // 调整未选中图标大小
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: '',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: _buildCustomCameraIcon(), // 自定义相机图标
+              label: '',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.message),
+              label: '',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: '',
+            ),
+          ],
+        ),
       ),
     );
   }

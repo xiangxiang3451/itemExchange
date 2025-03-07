@@ -32,10 +32,12 @@ class PostScreen extends StatelessWidget {
                     icon:
                         const Icon(Icons.arrow_back, color: Color(0xFFF2625A)),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      ); // 返回上一页
+                        MaterialPageRoute(
+                            builder: (context) => HomeScreen()), // 跳转到主界面
+                        (Route<dynamic> route) => false, // 清除所有路由
+                      );
                     },
                   ),
                 ),
@@ -244,10 +246,11 @@ class PostSuccessScreen extends StatelessWidget {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => HomeScreen()), // 替换为你的主页
+                      builder: (context) => HomeScreen()), // 跳转到主界面
+                  (Route<dynamic> route) => false, // 清除所有路由
                 );
               },
               style: ElevatedButton.styleFrom(
