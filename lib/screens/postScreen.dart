@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:item_exchange/screens/homeScreen.dart';
 import 'package:item_exchange/viewmodels/postViewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:item_exchange/screens/homeScreen.dart';
 
 class PostScreen extends StatefulWidget {
   @override
@@ -9,6 +9,15 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 延迟调用 loadData
+    Future.microtask(() {
+      Provider.of<PostViewModel>(context, listen: false).loadData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<PostViewModel>(context);
@@ -78,6 +87,7 @@ class _PostScreenState extends State<PostScreen> {
                         border: InputBorder.none,
                       ),
                       onChanged: viewModel.updateProductName,
+                      controller: viewModel.productNameController,
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -98,6 +108,7 @@ class _PostScreenState extends State<PostScreen> {
                         border: InputBorder.none,
                       ),
                       onChanged: viewModel.updateDescription,
+                      controller: viewModel.descriptionController,
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -117,6 +128,7 @@ class _PostScreenState extends State<PostScreen> {
                         border: InputBorder.none,
                       ),
                       onChanged: viewModel.updateCategory,
+                      controller: viewModel.categoryController,
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -134,21 +146,21 @@ class _PostScreenState extends State<PostScreen> {
                       children: [
                         CheckboxListTile(
                           title: const Text('New'),
-                          value: false,
+                          value: viewModel.post.itemCondition == 'New',
                           onChanged: (value) {
                             viewModel.updateItemCondition('New');
                           },
                         ),
                         CheckboxListTile(
                           title: const Text('Like new'),
-                          value: false,
+                          value: viewModel.post.itemCondition == 'Like new',
                           onChanged: (value) {
                             viewModel.updateItemCondition('Like new');
                           },
                         ),
                         CheckboxListTile(
                           title: const Text('Pristine'),
-                          value: false,
+                          value: viewModel.post.itemCondition == 'Pristine',
                           onChanged: (value) {
                             viewModel.updateItemCondition('Pristine');
                           },
@@ -173,6 +185,7 @@ class _PostScreenState extends State<PostScreen> {
                         border: InputBorder.none,
                       ),
                       onChanged: viewModel.updateRemarks,
+                      controller: viewModel.remarksController,
                     ),
                     const SizedBox(height: 16),
                     Container(
@@ -186,12 +199,25 @@ class _PostScreenState extends State<PostScreen> {
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: ElevatedButton(
                           onPressed: () async {
-                            await viewModel.postItem();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PostSuccessScreen()),
-                            );
+                            try {
+                              // 保存数据
+                              await viewModel.saveData();
+
+                              // 跳转到成功页面
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PostSuccessScreen()),
+                              );
+                            } catch (e) {
+                              // 错误处理
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Failed to save data: $e"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFF2625A),
@@ -218,6 +244,7 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 }
+
 class PostSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
